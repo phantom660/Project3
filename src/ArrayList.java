@@ -33,7 +33,24 @@ public class ArrayList<T extends Comparable<T>> implements List<T> {
 
     @Override
     public boolean add(int index, T element) {
-        return false;
+        if (element == null) {
+            return false;
+        }
+        if (nextEmpty == arrayList.length) {
+            this.extendListSize(this.arrayList);
+        }
+        if (index < arrayList.length) {
+            arrayList[index] = element;
+            for (int i = nextEmpty; i <= arrayList.length) {
+                if (arrayList[i] == null) {
+                    nextEmpty = i;
+                    return true;
+                }
+            }
+        } else {
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -42,5 +59,31 @@ public class ArrayList<T extends Comparable<T>> implements List<T> {
             arrayList[i] = null;
         }
         isSorted = true;
+    }
+
+    public T get(int index) {
+        if (index < arrayList.length) {
+            return arrayList[index];
+        }
+        return null;
+    }
+
+    @Override
+    public int indexOf(T element) {
+        if (isSorted) {
+            // TODO
+        } else {
+            for(int i = 0; i < arrayList.length; i++) {
+                if (arrayList[i].equals(element)) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        if 
     }
 }
