@@ -1,10 +1,12 @@
 public class ArrayList<T extends Comparable<T>> implements List<T> {
     private T[] arrayList;
     private boolean isSorted = true;
-    int nextEmpty;
+    private int numEle;
+    private int nextEmpty;
     public ArrayList() {
         arrayList = (T[]) new Comparable[2];
         nextEmpty = 0;
+        numEle = 0;
     }
 
     private void extendListSize(T[] oldList) {
@@ -25,31 +27,29 @@ public class ArrayList<T extends Comparable<T>> implements List<T> {
         }
         arrayList[nextEmpty] = element;
         if (nextEmpty != 0) {
-            isSorted = (arrayList[nextEmpty].compareTo(arrayList[nextEmpty - 1])) >= 1;
+            isSorted = arrayList[nextEmpty].compareTo(arrayList[nextEmpty - 1]) >= 1;
         }
-        nextEmpty ++;
+        nextEmpty++;
+        numEle ++;
         return true;
     }
 
     @Override
     public boolean add(int index, T element) {
-        if (element == null) {
+        if (element == null && index > nextEmpty) {
             return false;
         }
         if (nextEmpty == arrayList.length) {
             this.extendListSize(this.arrayList);
         }
-        if (index < arrayList.length) {
-            arrayList[index] = element;
-            for (int i = nextEmpty; i <= arrayList.length) {
-                if (arrayList[i] == null) {
-                    nextEmpty = i;
-                    return true;
-                }
-            }
-        } else {
-            return false;
+        for (int i = nextEmpty; i > index; i--) {
+            arrayList[i] = arrayList[i - 1];
         }
+        arrayList[index] = element;
+        if (arrayList[index - 1].compareTo(arrayList[index]) > 0 || (arrayList[index + 1] != null && arrayList[index + 1].compareTo(arrayList[index]) < 0)) {
+            isSorted = false;
+        }
+        nextEmpty ++;
         return true;
     }
 
@@ -59,6 +59,8 @@ public class ArrayList<T extends Comparable<T>> implements List<T> {
             arrayList[i] = null;
         }
         isSorted = true;
+        nextEmpty = 0;
+        numEle = 0;
     }
 
     public T get(int index) {
@@ -84,6 +86,48 @@ public class ArrayList<T extends Comparable<T>> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if 
+        if (nextEmpty == 0) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public int size() {
+        return numEle;
+    }
+
+    @Override
+    public void sort() {
+        if (!isSorted) {
+            // TODO
+            isSorted = true;
+        }
+    }
+
+    @Override
+    public T remove(int index) {
+        T remEle = null;
+        if (index < nextEmpty) {
+            remEle = arrayList[index];
+            for (int i = index; i < nextEmpty; i++) {
+                arrayList[i] = arrayList[i + 1];
+            }
+            nextEmpty --;
+        }
+        if (!isSorted) {
+            for (int i = 0; i < nextEmpty - 1; i++) {
+                if (arrayList[i].compareTo(arrayList[i + 1]) > 0) {
+                    isSorted = false;
+                    break;
+                }
+            }
+        }
+        return remEle;
+    }
+
+    @Override
+    public boolean isSorted() {
+        return isSorted;
     }
 }
