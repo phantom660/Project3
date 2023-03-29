@@ -19,7 +19,7 @@ public class ArrayList<T extends Comparable<T>> implements List<T> {
 
     @Override
     public boolean add(T element) {
-        if (element == null) {
+        if (element.equals(null)) {
             return false;
         }
         if (nextEmpty == arrayList.length) {
@@ -36,7 +36,7 @@ public class ArrayList<T extends Comparable<T>> implements List<T> {
 
     @Override
     public boolean add(int index, T element) {
-        if (element == null && index > nextEmpty) {
+        if (element.equals(null) && index > nextEmpty) {
             return false;
         }
         if (nextEmpty == arrayList.length) {
