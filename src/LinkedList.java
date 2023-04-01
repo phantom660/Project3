@@ -32,4 +32,9 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
         numEle ++;
         return true;
     }
+
+    @Override
+    public void clear() {
+
+    }
 }
