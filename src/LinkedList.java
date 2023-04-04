@@ -1,34 +1,44 @@
 public class LinkedList<T extends Comparable<T>> implements List<T> {
-    private Node firstNode;
-    private Node currentNode;
+    private Node<T> firstNode;
+    private Node<T> currentNode;
+    private Node<T> lastNode;
     private boolean isSorted = true;
     private int numEle;
     public LinkedList() {
         firstNode = new Node(null);
         currentNode = firstNode;
+        lastNode = firstNode;
         numEle = 0;
     }
 
     @Override
     public boolean add(T element) {
-        if (element.equals(null)) {
+        if (element == null) {
             return false;
         }
-        currentNode.setNext(new Node(element, null));
+        lastNode.setNext(new Node<T>(element, null));
         numEle ++;
         if (numEle > 1) {
-            isSorted = currentNode.getData().compareTo(currentNode.getNext().getData()) < 1;
+            isSorted = lastNode.getData().compareTo(lastNode.getNext().getData()) < 1;
         }
-        currentNode = currentNode.getNext();
+        lastNode = lastNode.getNext();
         return true;
     }
 
     @Override
     public boolean add(int index, T element) {
-        if (element.equals(null) || index > numEle) {
+        currentNode = firstNode;
+        if (element == null || index > numEle) {
             return false;
         }
-        // TODO
+        int ind = 0;
+        while (ind++ < index) {
+            currentNode = currentNode.getNext();
+        }
+        currentNode.setNext(new Node<T>(element, currentNode.getNext()));
+        if (numEle > 1) {
+            isSorted = (currentNode.getData()== null || currentNode.getData().compareTo(currentNode.getNext().getData()) < 1) && (currentNode.getNext().getNext() == null || currentNode.getNext().getData().compareTo(currentNode.getNext().getNext().getData()) > 1);
+        }
         numEle ++;
         return true;
     }
@@ -57,9 +67,9 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
     @Override
     public int indexOf(T element) {
         currentNode = firstNode;
-        if (!element.equals(null)) {
+        if (element != null) {
             int index = 0;
-            while (!currentNode.getNext().equals(null)) {
+            while (currentNode.getNext() != null) {
                 if (element.equals(currentNode.getNext().getData())) {
                     return index;
                 } else {
@@ -73,7 +83,7 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (firstNode.getNext().equals(null)) {
+        if (firstNode.getNext() == null) {
             return true;
         }
         return false;
@@ -123,6 +133,7 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
     @Override
     public boolean rotate(int n) {
         // TODO
+        return true;
     }
 
     @Override

@@ -189,6 +189,11 @@ public class ArrayList<T extends Comparable<T>> implements List<T> {
     }
 
     @Override
+    public void equalTo(T element) {
+        // TODO
+    }
+
+    @Override
     public boolean isSorted() {
         return isSorted;
     }
