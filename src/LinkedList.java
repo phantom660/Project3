@@ -104,4 +104,40 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
         numEle --;
         return removedEle;
     }
+
+    @Override
+    public void equalTo(T element) {
+        // TODO
+    }
+
+    @Override
+    public void reverse() {
+        // TODO
+    }
+
+    @Override
+    public void merge(List<T> otherList) {
+        // TODO
+    }
+
+    @Override
+    public boolean rotate(int n) {
+        // TODO
+    }
+
+    @Override
+    public String toString() {
+        currentNode = firstNode;
+        String retStr = "";
+        while (currentNode.getNext() != null) {
+            currentNode = currentNode.getNext();
+            retStr = retStr + currentNode.getData() + "/n";
+        }
+        return retStr;
+    }
+
+    @Override
+    public boolean isSorted() {
+        return isSorted;
+    }
 }
