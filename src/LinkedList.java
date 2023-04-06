@@ -137,7 +137,22 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
 
     @Override
     public void reverse() {
-        // TODO
+        if (numEle != 0 || numEle != 1) {
+            currentNode = firstNode.getNext();
+            Node<T> newL = null;
+            while (currentNode != null) {
+                Node<T> temp = currentNode;
+                currentNode = currentNode.getNext();
+                temp.setNext(newL);
+                newL = temp;
+            }
+            firstNode.setNext(newL);
+            currentNode = firstNode.getNext();
+            while (currentNode.getNext() != null) {
+                isSorted = currentNode.getData().compareTo(currentNode.getNext().getData()) <= 0;
+                currentNode = currentNode.getNext();
+            }
+        }
     }
 
     @Override
@@ -194,7 +209,7 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
         ll.add(8);
         ll.add(9);
         System.out.println(ll);
-        boolean b = ll.rotate(6);
+        ll.reverse();
         System.out.println(ll);
     }
 }
