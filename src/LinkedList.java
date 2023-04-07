@@ -18,7 +18,7 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
         }
         lastNode.setNext(new Node<T>(element, null));
         numEle ++;
-        if (numEle > 1) {
+        if (numEle > 1 && isSorted) {
             isSorted = lastNode.getData().compareTo(element) <= 0;
         }
         lastNode = lastNode.getNext();
@@ -36,7 +36,7 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
             currentNode = currentNode.getNext();
         }
         currentNode.setNext(new Node<T>(element, currentNode.getNext()));
-        if (numEle > 1) {
+        if (numEle > 1 && isSorted) {
             isSorted = (currentNode.getData() == null || currentNode.getData().compareTo(element) <= 0) && (currentNode.getNext().getNext() == null || element.compareTo(currentNode.getNext().getNext().getData()) <= 0);
         }
         numEle ++;
@@ -100,7 +100,25 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
 
     @Override
     public void sort() {
-        // TODO
+        if (!isSorted && (numEle != 0 || numEle != 1)) {
+            currentNode = firstNode.getNext();
+            Node<T> sorted = new Node<>(null);
+            while (currentNode != null) {
+                T data = currentNode.getData();
+                Node<T> ptr, trailer;
+                ptr = sorted.getNext();
+                trailer = sorted;
+                while (ptr != null && ptr.getData().compareTo(data) < 0) {
+                    trailer = ptr;
+                    ptr = ptr.getNext();
+                }
+
+                trailer.setNext(new Node<T> (data, ptr));
+                currentNode = currentNode.getNext();
+            }
+            firstNode = sorted;
+        }
+        isSorted = true;
     }
 
     @Override
@@ -199,17 +217,14 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
 
     public static void main(String[] args) {
         LinkedList<Integer> ll = new LinkedList<Integer>();
+        ll.add(4);
         ll.add(1);
+        ll.add(6);
+        ll.add(2);
         ll.add(2);
         ll.add(3);
-        ll.add(4);
-        ll.add(5);
-        ll.add(6);
-        ll.add(7);
-        ll.add(8);
-        ll.add(9);
         System.out.println(ll);
-        ll.reverse();
+        ll.sort();
         System.out.println(ll);
     }
 }
