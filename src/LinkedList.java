@@ -175,7 +175,35 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
 
     @Override
     public void merge(List<T> otherList) {
-        // TODO
+        if (otherList != null) {
+            LinkedList<T> other = (LinkedList<T>) otherList;
+            Node<T> mergedNode = new Node<T> (null);
+            Node<T> ptr = mergedNode;
+            int counter = 0;
+            this.sort();
+            other.sort();
+            while (this.get(0) != null || other.get(0) != null) {
+                T addEle;
+                if (this.get(0) == null) {
+                    addEle = other.remove(0);
+                    ptr.setNext(new Node<T> (addEle, null));
+                } else if (other.get(0) == null) {
+                    addEle = this.remove(0);
+                    ptr.setNext(new Node<T> (addEle, null));
+                } else if (this.get(0).compareTo(other.get(0)) <= 0) {
+                    addEle = this.remove(0);
+                    ptr.setNext(new Node<T> (addEle, null));
+                } else {
+                    addEle = other.remove(0);
+                    ptr.setNext(new Node<T> (addEle, null));
+                }
+                ptr = ptr.getNext();
+                counter ++;
+            }
+            firstNode = mergedNode;
+            isSorted = true;
+            numEle = counter;
+        }
     }
 
     @Override
@@ -216,15 +244,16 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
     }
 
     public static void main(String[] args) {
-        LinkedList<Integer> ll = new LinkedList<Integer>();
-        ll.add(4);
-        ll.add(1);
-        ll.add(6);
-        ll.add(2);
-        ll.add(2);
-        ll.add(3);
-        System.out.println(ll);
-        ll.sort();
-        System.out.println(ll);
+        LinkedList<Integer> l1 = new LinkedList<Integer>();
+        LinkedList<Integer> l2 = new LinkedList<Integer>();
+        l1.add(4);
+        l1.add(1);
+        l1.add(6);
+        l2.add(2);
+        l2.add(2);
+        l2.add(3);
+        l1.merge(l2);
+        System.out.println(l1);
+        System.out.println(l2);
     }
 }
