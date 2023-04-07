@@ -40,6 +40,9 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
             isSorted = (currentNode.getData() == null || currentNode.getData().compareTo(element) <= 0) && (currentNode.getNext().getNext() == null || element.compareTo(currentNode.getNext().getNext().getData()) <= 0);
         }
         numEle ++;
+        if (lastNode.getNext() != null) {
+            lastNode = lastNode.getNext();
+        }
         return true;
     }
 
@@ -48,16 +51,17 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
         firstNode.setNext(null);
         numEle = 0;
         isSorted = true;
+        lastNode = firstNode;
     }
 
     @Override
     public T get(int index) {
         currentNode = firstNode;
-        if (index >= numEle) {
+        if (index >= numEle || index < 0) {
             return null;
         }
         int ind = 0;
-        while (ind++ <= index) {
+        while (ind++ <= index && currentNode.getNext()!=null) {
             currentNode = currentNode.getNext();
         }
         return (T) currentNode.getData();
@@ -72,11 +76,11 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
                 if (element.equals(currentNode.getNext().getData())) {
                     return index;
                 } else {
-//                    if (isSorted) {
-//                        if (currentNode.getNext().getData().compareTo(element) > 0) {
-//                            break;
-//                        }
-//                    }
+                    if (isSorted) {
+                        if (currentNode.getNext().getData().compareTo(element) > 0) {
+                            break;
+                        }
+                    }
                     currentNode = currentNode.getNext();
                     index ++;
                 }
@@ -118,6 +122,13 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
             }
             firstNode = sorted;
         }
+
+        if (lastNode.getNext() != null) {
+            while (lastNode.getNext() != null) {
+                lastNode = lastNode.getNext();
+            }
+        }
+
         isSorted = true;
     }
 
@@ -134,6 +145,12 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
         T removedEle = (T) currentNode.getNext().getData();
         currentNode.setNext(currentNode.getNext().getNext());
         numEle --;
+
+        lastNode = firstNode;
+        while (lastNode.getNext() != null) {
+            lastNode = lastNode.getNext();
+        }
+
         return removedEle;
     }
 
@@ -148,6 +165,7 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
                 } else {
                     currentNode = currentNode.getNext();
                 }
+                lastNode = currentNode;
             }
             isSorted = true;
         }
@@ -157,6 +175,7 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
     public void reverse() {
         if (numEle != 0 || numEle != 1) {
             currentNode = firstNode.getNext();
+            lastNode = firstNode.getNext();
             Node<T> newL = null;
             while (currentNode != null) {
                 Node<T> temp = currentNode;
@@ -203,13 +222,18 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
             firstNode = mergedNode;
             isSorted = true;
             numEle = counter;
+
+            lastNode = firstNode;
+            while (lastNode.getNext() != null) {
+                lastNode = lastNode.getNext();
+            }
         }
     }
 
     @Override
     public boolean rotate(int n) {
         currentNode = firstNode;
-        if (n <= 0 || numEle <= 1) {
+        if (n <= 0 || numEle <= 1 || n >= numEle) {
             return false;
         }
         while (n++ < numEle) {
@@ -224,6 +248,11 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
             isSorted = currentNode.getData().compareTo(currentNode.getNext().getData()) <= 0;
             currentNode = currentNode.getNext();
         }
+
+        while (lastNode.getNext() != null) {
+            lastNode = lastNode.getNext();
+        }
+
         return true;
     }
 
@@ -250,10 +279,12 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
         l1.add(1);
         l1.add(6);
         l2.add(2);
-        l2.add(2);
+        l2.add(5);
         l2.add(3);
+        System.out.println(l1);
         l1.merge(l2);
         System.out.println(l1);
-        System.out.println(l2);
+        l1.rotate(3);
+        System.out.println(l1);
     }
 }
