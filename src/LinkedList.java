@@ -151,10 +151,15 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
             lastNode = lastNode.getNext();
         }
 
-//        currentNode = firstNode.getNext();
-//        while (currentNode != null) {
-//            System.out.println(currentNode.getData());
-//            currentNode = currentNode.getNext();
+//        if (!isSorted) {
+//            isSorted = true;
+//            currentNode = firstNode;
+//            while (isSorted && currentNode != lastNode) {
+//                currentNode = currentNode.getNext();
+//                if (currentNode.getData().compareTo(currentNode.getNext().getData()) > 0) {
+//                    isSorted = false;
+//                }
+//            }
 //        }
 
         return removedEle;
@@ -211,17 +216,14 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
                 T addEle;
                 if (this.get(0) == null) {                                                      // If this list if empty, keeps adding the other list to the merged list
                     addEle = other.remove(0);
-                    ptr.setNext(new Node<T> (addEle, null));
                 } else if (other.get(0) == null) {                                              // If the other list if empty, keeps adding this list to the merged list
                     addEle = this.remove(0);
-                    ptr.setNext(new Node<T> (addEle, null));
                 } else if (this.get(0).compareTo(other.get(0)) <= 0) {                          // If none are empty, compares the values of both the lists and adds the smaller one to the merged list
                     addEle = this.remove(0);
-                    ptr.setNext(new Node<T> (addEle, null));
                 } else {
                     addEle = other.remove(0);
-                    ptr.setNext(new Node<T> (addEle, null));
                 }
+                ptr.setNext(new Node<T> (addEle, null));
                 ptr = ptr.getNext();
                 counter ++;
             }

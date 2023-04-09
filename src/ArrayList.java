@@ -1,200 +1,336 @@
-import java.util.Arrays;
 
 public class ArrayList<T extends Comparable<T>> implements List<T> {
-    private T[] arrayList;
-    private boolean isSorted = true;
-    private int numEle;
-    private int nextEmpty;
 
+    private T[] elements;
+    private int count;
+    private boolean isSorted;
+
+    // Constructor initializes the ArrayList and sets isSorted to true.
     public ArrayList() {
-        arrayList = (T[]) new Comparable[2];
-        nextEmpty = 0;
-        numEle = 0;
+        elements = (T[]) new Comparable[2];
+        count = 0;
+        isSorted = true;
     }
 
-    private void extendListSize() {
-        T[] newList = (T[]) new Comparable[arrayList.length * 2];
-        System.arraycopy(arrayList, 0, newList, 0, arrayList.length);
-        arrayList = newList;
+    // Checks if the ArrayList is sorted and returns the result.
+    private boolean checkIsSorted() {
+        boolean check = true;
+        for (int k = 1; k < count; k++) {
+            check &= elements[k].compareTo(elements[k - 1]) >= 0;
+        }
+        return check;
     }
 
-    @Override
-    public boolean add(T element) {
-        if (element == null) {
+    // Increases the size of the elements array when needed.
+    private void grow() {
+        T[] updatedElements = (T[]) new Comparable[elements.length * 2];
+        for (int i = 0; i < count; i++) {
+            updatedElements[i] = elements[i];
+        }
+        elements = updatedElements;
+    }
+
+    // Adds a value to the end of the ArrayList.
+    public boolean add(T value) {
+        if (value == null) {
             return false;
         }
-        if (nextEmpty == arrayList.length) {
-            extendListSize();
+        if (count == elements.length) {
+            grow();
         }
-        arrayList[nextEmpty] = element;
-        if (nextEmpty != 0) {
-            isSorted = arrayList[nextEmpty].compareTo(arrayList[nextEmpty - 1]) >= 1;
-        }
-        nextEmpty++;
-        numEle++;
-        return true;
-    }
-
-    @Override
-    public boolean add(int index, T element) {
-        if (element == null || index > nextEmpty) {
-            return false;
-        }
-        if (nextEmpty == arrayList.length) {
-            extendListSize();
-        }
-        System.arraycopy(arrayList, index, arrayList, index + 1, nextEmpty - index);
-        arrayList[index] = element;
-        if (arrayList[index - 1].compareTo(arrayList[index]) > 0 || (arrayList[index + 1] != null && arrayList[index + 1].compareTo(arrayList[index]) < 0)) {
+        if (count > 0 && isSorted && value.compareTo(elements[count - 1]) < 0) {
             isSorted = false;
         }
-        nextEmpty++;
-        numEle++;
+        elements[count++] = value;
+        isSorted = checkIsSorted();
         return true;
     }
 
-    @Override
-    public void clear() {
-        arrayList = (T[]) new Comparable[2];
-        isSorted = true;
-        nextEmpty = 0;
-        numEle = 0;
-    }
-
-    public T get(int index) {
-        if (index < arrayList.length) {
-            return arrayList[index];
+    // Inserts a value at a specific position in the ArrayList.
+    public boolean add(int position, T value) {
+        if (value == null || position < 0 || position >= count) {
+            return false;
         }
-        return null;
-    }
+        if (count == elements.length) {
+            grow();
+        }
 
-    @Override
-    public int indexOf(T element) {
-        for (int i = 0; i < arrayList.length; i++) {
-            if (arrayList[i].equals(element)) {
-                return i;
+        for (int i = count; i > position; i--) {
+            elements[i] = elements[i - 1];
+        }
+        elements[position] = value;
+        count++;
+
+        if (isSorted) {
+            if ((position > 0 && value.compareTo(elements[position - 1]) < 0) ||
+                    (position < count - 1 && value.compareTo(elements[position + 1]) > 0)) {
+                isSorted = false;
             }
         }
-        return -1;
+        isSorted = checkIsSorted();
+        return true;
     }
 
-    @Override
+
+    // Clears the ArrayList and resets isSorted to true.
+    public void clear() {
+        elements = (T[]) new Comparable[2];
+        count = 0;
+        isSorted = true;
+    }
+
+    // Returns the element at a specific position.
+    public T get(int position) {
+        if (position < 0 || position >= count) {
+            return null;
+        }
+        return elements[position];
+    }
+
+    // Finds the first index of a value in the ArrayList.
+    public int indexOf(T value) {
+        if (value == null) {
+            return -1;
+        }
+
+        int index = -1;
+
+        for (int i = 0; i < count; i++) {
+            if (elements[i].equals(value)) {
+                if (isSorted) {
+                    if (i == 0 || !elements[i - 1].equals(value)) {
+                        return i;
+                    }
+                } else {
+                    return i;
+                }
+                index = i;
+            }
+        }
+
+        return index;
+    }
+
+    // Checks if the ArrayList is empty.
     public boolean isEmpty() {
-        return nextEmpty == 0;
+        return count == 0;
     }
 
-    @Override
+    // Returns the number of elements in the ArrayList.
     public int size() {
-        return numEle;
+        return count;
     }
 
-    @Override
+    // Sorts the ArrayList using insertion sort.
     public void sort() {
         if (!isSorted) {
-            Arrays.sort(arrayList, 0, nextEmpty);
+            for (int i = 1; i < count; i++) {
+                T currentElement = elements[i];
+                int prevIndex = i - 1;
+                while (prevIndex >= 0 && elements[prevIndex].compareTo(currentElement) > 0) {
+                    elements[prevIndex + 1] = elements[prevIndex];
+                    prevIndex--;
+                }
+                elements[prevIndex + 1] = currentElement;
+            }
             isSorted = true;
         }
     }
 
-    @Override
-    public T remove(int index) {
-        if (index >= nextEmpty) {
+    // Removes the element at a specific position.
+    public T remove(int position) {
+        if (position < 0 || position >= count) {
             return null;
         }
-        T removedElement = arrayList[index];
-        System.arraycopy(arrayList, index + 1, arrayList, index, nextEmpty - index - 1);
-        nextEmpty--;
-        numEle--;
-        isSorted = true;
-        for (int i = 1; i < nextEmpty; i++) {
-            if (arrayList[i - 1].compareTo(arrayList[i]) > 0) {
+        T removedElement = elements[position];
+
+        for (int i = position; i < count - 1; i++) {
+            elements[i] = elements[i + 1];
+        }
+
+        count--;
+
+        if (isSorted && position > 1 && position < count) {
+            T prevElement = elements[position - 1];
+            T currentElement = elements[position];
+
+            if (currentElement.compareTo(prevElement) < 0) {
                 isSorted = false;
-                break;
             }
         }
+        isSorted = checkIsSorted();
         return removedElement;
     }
 
-    @Override
-    public void reverse() {
-        for (int i = 0; i < nextEmpty / 2; i++) {
-            T temp = arrayList[i];
-            arrayList[i] = arrayList[nextEmpty - 1 - i];
-            arrayList[nextEmpty - 1 - i] = temp;
-        }
-        isSorted = nextEmpty <= 1;
-    }
-
-    @Override
-    public void merge(List<T> otherList) {
-        if (otherList == null) {
+    // Removes all elements except those equal to the given value.
+    public void equalTo(T value) {
+        if (value == null) {
+            count = 0;
             return;
         }
+        int newCount = 0;
+        if (isSorted) {
+            int pos = indexOf(value);
+            if (pos != -1) {
+                while (pos < count && elements[pos].equals(value)) {
+                    elements[newCount++] = elements[pos++];
+                }
+            }
+        } else {
+            for (int i = 0; i < count; i++) {
+                if (elements[i].equals(value)) {
+                    elements[newCount++] = elements[i];
+                }
+            }
+        }
+        count = newCount;
+        isSorted = checkIsSorted();
+    }
+
+    // Reverses the order of elements in the ArrayList.
+    public void reverse() {
+        int leftIndex = 0;
+        int rightIndex = count - 1;
+
+        while (leftIndex < rightIndex) {
+            T temp = elements[leftIndex];
+            elements[leftIndex] = elements[rightIndex];
+            elements[rightIndex] = temp;
+
+            leftIndex++;
+            rightIndex--;
+        }
+
+        if (count > 1) {
+            isSorted = false;
+        }
+        isSorted = checkIsSorted();
+    }
+
+    // Merges the current ArrayList with another sorted list.
+    public void merge(List<T> otherList) {
+        if (otherList == null || otherList.isEmpty()) {
+            return;
+        }
+
         ArrayList<T> other = (ArrayList<T>) otherList;
         sort();
         other.sort();
 
-        T[] mergedArray = (T[]) new Comparable[numEle + other.size()];
-        int i = 0, j = 0, k = 0;
+        T[] newData = (T[]) new Comparable[count + other.size()];
+        int indexThis = 0;
+        int indexOther = 0;
+        int indexNew = 0;
 
-        while (i < numEle && j < other.size()) {
-            if (arrayList[i].compareTo(other.get(j)) <= 0) {
-                mergedArray[k++] = arrayList[i++];
+        while (indexThis < count && indexOther < other.size()) {
+            if (elements[indexThis].compareTo(other.elements[indexOther]) <= 0) {
+                newData[indexNew++] = elements[indexThis++];
             } else {
-                mergedArray[k++] = other.get(j++);
+                newData[indexNew++] = other.elements[indexOther++];
             }
         }
 
-        while (i < numEle) {
-            mergedArray[k++] = arrayList[i++];
+        while (indexThis < count) {
+            newData[indexNew++] = elements[indexThis++];
         }
 
-        while (j < other.size()) {
-            mergedArray[k++] = other.get(j++);
+        while (indexOther < other.size()) {
+            newData[indexNew++] = other.elements[indexOther++];
         }
 
-        arrayList = mergedArray;
-        nextEmpty = numEle + other.size();
-        numEle += other.size();
+        elements = newData;
+        count = count + other.size();
         isSorted = true;
     }
 
-    @Override
+    // Rotates the ArrayList by a given number of positions.
     public boolean rotate(int n) {
-        if (n <= 0 || nextEmpty <= 1) {
+        if (n <= 0 || count <= 1) {
             return false;
         }
+        n %= count;
 
-        n %= nextEmpty;
-        reverse();
-        T[] first = Arrays.copyOfRange(arrayList, 0, n);
-        T[] second = Arrays.copyOfRange(arrayList, n, nextEmpty);
-        System.arraycopy(second, 0, arrayList, 0, second.length);
-        System.arraycopy(first, 0, arrayList, second.length, first.length);
-        isSorted = false;
+        int start = 0;
+        int end = count - n - 1;
+        while (start < end) {
+            T temp = elements[start];
+            elements[start++] = elements[end];
+            elements[end--] = temp;
+        }
 
+        start = count - n;
+        end = count - 1;
+        while (start < end) {
+            T temp = elements[start];
+            elements[start++] = elements[end];
+            elements[end--] = temp;
+        }
+
+        start = 0;
+        end = count - 1;
+        while (start < end) {
+            T temp = elements[start];
+            elements[start++] = elements[end];
+            elements[end--] = temp;
+        }
+        if (count > 1) {
+            isSorted = false;
+        }
+        isSorted = checkIsSorted();
         return true;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < nextEmpty; i++) {
-            sb.append(arrayList[i].toString());
-            if (i < nextEmpty - 1) {
-                sb.append("\n");
-            }
-        }
-        return sb.toString();
-    }
-
-    @Override
-    public void equalTo(T element) {
-        // TODO
-    }
-
-    @Override
+    // Returns true if the ArrayList is sorted, false otherwise.
     public boolean isSorted() {
         return isSorted;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//    public String toString() {
+//        StringBuilder sb = new StringBuilder();
+//        for (int i = 0; i < nextEmpty; i++) {
+//            sb.append(arrayList[i].toString());
+//            if (i < nextEmpty - 1) {
+//                sb.append("\n");
+//            }
+//        }
+//        return sb.toString();
+//    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
