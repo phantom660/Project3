@@ -1,11 +1,11 @@
 public class LinkedList<T extends Comparable<T>> implements List<T> {
-    private Node<T> firstNode;
-    private Node<T> currentNode;
-    private Node<T> lastNode;
+    private Node<T> firstNode;                              // Points to the header node in the headed linked list
+    private Node<T> currentNode;                            // Points to the node we are working with - Initialised to firstNode or firstNode.getNext() at the start of required methods
+    private Node<T> lastNode;                               // Points to the last node in the List
     private boolean isSorted = true;
-    private int numEle;
+    private int numEle;                                     // Keeps track of number of elements in the list
     public LinkedList() {
-        firstNode = new Node(null);
+        firstNode = new Node<T>(null);
         currentNode = firstNode;
         lastNode = firstNode;
         numEle = 0;
@@ -16,12 +16,12 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
         if (element == null) {
             return false;
         }
-        lastNode.setNext(new Node<T>(element, null));
+        lastNode.setNext(new Node<T>(element, null));                           // Adds element to the end of the list
         numEle ++;
-        if (numEle > 1 && isSorted) {
-            isSorted = lastNode.getData().compareTo(element) <= 0;
+        if (numEle > 1 && isSorted) {                                                // Checks for isSorted only if list is sorted
+            isSorted = lastNode.getData().compareTo(element) <= 0;                   // Compares previous lastNode to added element
         }
-        lastNode = lastNode.getNext();
+        lastNode = lastNode.getNext();                                               // Updates lastNode
         return true;
     }
 
@@ -31,16 +31,16 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
         if (element == null || index > numEle) {
             return false;
         }
-        int ind = 0;
+        int ind = 0;                                                                                    // Keeps track of index while traversing the list
         while (ind++ < index) {
             currentNode = currentNode.getNext();
         }
-        currentNode.setNext(new Node<T>(element, currentNode.getNext()));
-        if (numEle > 1 && isSorted) {
-            isSorted = (currentNode.getData() == null || currentNode.getData().compareTo(element) <= 0) && (currentNode.getNext().getNext() == null || element.compareTo(currentNode.getNext().getNext().getData()) <= 0);
+        currentNode.setNext(new Node<T>(element, currentNode.getNext()));                               // Adds element at given index
+        if (numEle > 1 && isSorted) {                                                                   // Checks for isSorted only if list is sorted
+            isSorted = (currentNode.getData() == null || currentNode.getData().compareTo(element) <= 0) && (currentNode.getNext().getNext() == null || element.compareTo(currentNode.getNext().getNext().getData()) <= 0);      // Compares added value with the previous and the next values (also takes care of null if added at first or last index)
         }
         numEle ++;
-        if (lastNode.getNext() != null) {
+        if (lastNode.getNext() != null) {                                                               // Updates lastNode
             lastNode = lastNode.getNext();
         }
         return true;
@@ -48,8 +48,8 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
 
     @Override
     public void clear() {
-        firstNode.setNext(null);
-        numEle = 0;
+        firstNode.setNext(null);                                            // Sets the header node to null to clear the list
+        numEle = 0;                                                         // Accordingly changes the instance variables
         isSorted = true;
         lastNode = firstNode;
     }
@@ -57,14 +57,14 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
     @Override
     public T get(int index) {
         currentNode = firstNode;
-        if (index >= numEle || index < 0) {
+        if (index >= numEle || index < 0) {                                 // Returns null for an out-of-bounds index
             return null;
         }
-        int ind = 0;
-        while (ind++ <= index && currentNode.getNext()!=null) {
+        int ind = 0;                                                        // Keeps track of the index
+        while (ind++ <= index && currentNode.getNext()!=null) {             // Traverses the list until index is reached
             currentNode = currentNode.getNext();
         }
-        return (T) currentNode.getData();
+        return (T) currentNode.getData();                                   // Returns the value at given index
     }
 
     @Override
@@ -72,13 +72,13 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
         currentNode = firstNode;
         if (element != null && !isEmpty()) {
             int index = 0;
-            while (currentNode.getNext() != null) {
+            while (currentNode.getNext() != null) {                                         // Traverses through the list to find the given element
                 if (element.equals(currentNode.getNext().getData())) {
-                    return index;
+                    return index;                                                           // Returns the first index at which element is found (if found)
                 } else {
                     if (isSorted) {
-                        if (currentNode.getNext().getData().compareTo(element) > 0) {
-                            break;
+                        if (currentNode.getNext().getData().compareTo(element) > 0) {       // If list is sorted and a value greater than the element is encountered, the traversal stops and -1 is returned
+                            return -1;
                         }
                     }
                     currentNode = currentNode.getNext();
@@ -91,7 +91,7 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (firstNode.getNext() == null) {
+        if (lastNode.equals(firstNode)) {                  // if lastNode points to firstNode, which is the header node, the linked list is empty
             return true;
         }
         return false;
@@ -100,30 +100,30 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
     @Override
     public int size() {
         return numEle;
-    }
+    }                   // Returns the number of elements in the linked list (excluding the header node)
 
     @Override
     public void sort() {
-        if (!isSorted && (numEle != 0 || numEle != 1)) {
+        if (!isSorted && (numEle != 0 || numEle != 1)) {                                            // Sorts list only if not already sorted
             currentNode = firstNode.getNext();
             Node<T> sorted = new Node<>(null);
-            while (currentNode != null) {
-                T data = currentNode.getData();
+            while (currentNode != null) {                                                           // Takes all values in the linked list, adds them to the new list in a sorted manner and then sets the current list to the sorted list
+                T data = currentNode.getData();                                                     // Stores the data of the current node to compare to previous nodes
                 Node<T> ptr, trailer;
                 ptr = sorted.getNext();
                 trailer = sorted;
-                while (ptr != null && ptr.getData().compareTo(data) < 0) {
+                while (ptr != null && ptr.getData().compareTo(data) < 0) {                          // Traverses through the previous nodes to find where to insert the data. Loop breaks at point of insertion
                     trailer = ptr;
                     ptr = ptr.getNext();
                 }
 
-                trailer.setNext(new Node<T> (data, ptr));
+                trailer.setNext(new Node<T> (data, ptr));                                           // Inserts the new node at the point where the loop breaks, i.e. at correct position of insertion. Inserts at 0th index if list is null
                 currentNode = currentNode.getNext();
             }
-            firstNode = sorted;
+            firstNode = sorted;                                                                     // Sets this list to the sorted list (header of this list to header of sorted list)
         }
 
-        if (lastNode.getNext() != null) {
+        if (lastNode.getNext() != null) {                                                           // Sets the last node
             while (lastNode.getNext() != null) {
                 lastNode = lastNode.getNext();
             }
@@ -150,6 +150,12 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
         while (lastNode.getNext() != null) {
             lastNode = lastNode.getNext();
         }
+
+//        currentNode = firstNode.getNext();
+//        while (currentNode != null) {
+//            System.out.println(currentNode.getData());
+//            currentNode = currentNode.getNext();
+//        }
 
         return removedEle;
     }
@@ -185,7 +191,7 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
             }
             firstNode.setNext(newL);
             currentNode = firstNode.getNext();
-            while (currentNode.getNext() != null) {
+            while (isSorted && currentNode.getNext() != null) {
                 isSorted = currentNode.getData().compareTo(currentNode.getNext().getData()) <= 0;
                 currentNode = currentNode.getNext();
             }
@@ -196,20 +202,20 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
     public void merge(List<T> otherList) {
         if (otherList != null) {
             LinkedList<T> other = (LinkedList<T>) otherList;
-            Node<T> mergedNode = new Node<T> (null);
-            Node<T> ptr = mergedNode;
-            int counter = 0;
+            Node<T> mergedNode = new Node<T> (null);                                        // First Node of the merged linked list
+            Node<T> ptr = mergedNode;                                                            // Points to the last node of the linked list, where new elements are added
+            int counter = 0;                                                                     // Keeps track of the number of elements added to the merged list
             this.sort();
             other.sort();
-            while (this.get(0) != null || other.get(0) != null) {
+            while (this.get(0) != null || other.get(0) != null) {                               // Keeps looping until both lists are empty
                 T addEle;
-                if (this.get(0) == null) {
+                if (this.get(0) == null) {                                                      // If this list if empty, keeps adding the other list to the merged list
                     addEle = other.remove(0);
                     ptr.setNext(new Node<T> (addEle, null));
-                } else if (other.get(0) == null) {
+                } else if (other.get(0) == null) {                                              // If the other list if empty, keeps adding this list to the merged list
                     addEle = this.remove(0);
                     ptr.setNext(new Node<T> (addEle, null));
-                } else if (this.get(0).compareTo(other.get(0)) <= 0) {
+                } else if (this.get(0).compareTo(other.get(0)) <= 0) {                          // If none are empty, compares the values of both the lists and adds the smaller one to the merged list
                     addEle = this.remove(0);
                     ptr.setNext(new Node<T> (addEle, null));
                 } else {
@@ -219,12 +225,12 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
                 ptr = ptr.getNext();
                 counter ++;
             }
-            firstNode = mergedNode;
+            firstNode = mergedNode;                                                                 // Sets the current linked list to the merged one
             isSorted = true;
             numEle = counter;
 
             lastNode = firstNode;
-            while (lastNode.getNext() != null) {
+            while (lastNode.getNext() != null) {                                                    // Sets the last node
                 lastNode = lastNode.getNext();
             }
         }
@@ -244,7 +250,7 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
         currentNode.setNext(null);
 
         currentNode = firstNode.getNext();
-        while (currentNode.getNext() != null) {
+        while (isSorted && currentNode.getNext() != null) {
             isSorted = currentNode.getData().compareTo(currentNode.getNext().getData()) <= 0;
             currentNode = currentNode.getNext();
         }
@@ -260,7 +266,7 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
     public String toString() {
         currentNode = firstNode;
         String retStr = "";
-        while (currentNode.getNext() != null) {
+        while (currentNode.getNext() != null) {                     // Creates a string representation of the linked list, with each element in a new line
             currentNode = currentNode.getNext();
             retStr = retStr + currentNode.getData() + "\n";
         }
@@ -268,23 +274,21 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
     }
 
     @Override
-    public boolean isSorted() {
+    public boolean isSorted() {                     // Returns isSorted, whether the linked list is sorted
         return isSorted;
     }
 
     public static void main(String[] args) {
         LinkedList<Integer> l1 = new LinkedList<Integer>();
-        LinkedList<Integer> l2 = new LinkedList<Integer>();
-        l1.add(4);
+//        LinkedList<Integer> l2 = new LinkedList<Integer>();
         l1.add(1);
-        l1.add(6);
-        l2.add(2);
-        l2.add(5);
-        l2.add(3);
-        System.out.println(l1);
-        l1.merge(l2);
-        System.out.println(l1);
-        l1.rotate(3);
+        l1.add(3);
+        l1.add(7);
+        l1.add(9);
+        l1.add(10);
+        l1.add(10);
+        l1.add(6, 1);
+        l1.remove(4);
         System.out.println(l1);
     }
 }
