@@ -1,3 +1,4 @@
+// Written by Srinivas Preetham Addepalli, addep011 and Tamojit Bera, bera0041
 
 public class ArrayList<T extends Comparable<T>> implements List<T> {
 
@@ -300,6 +301,7 @@ public class ArrayList<T extends Comparable<T>> implements List<T> {
         return isSorted;
     }
 
+    // Creates a String representation of the array, with each element in a new line
     public String toString() {
         String retStr = "";
         for (int i = 0; i < count; i++) {

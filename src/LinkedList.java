@@ -1,4 +1,5 @@
-//
+// Written by Tamojit Bera, bera0041 and Srinivas Preetham Addepalli, addep011
+
 public class LinkedList<T extends Comparable<T>> implements List<T> {
     private Node<T> firstNode;                              // Points to the header node in the headed linked list
     private Node<T> currentNode;                            // Points to the node we are working with - Initialised to firstNode or firstNode.getNext() at the start of required methods
@@ -169,16 +170,16 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
     public void equalTo(T element) {
         if (element != null) {
             currentNode = firstNode;
-            while (currentNode.getNext() != null) {
+            while (currentNode.getNext() != null) {                                                 // Iterates through the list and removes nodes whose values are not equal to element
                 if (!currentNode.getNext().getData().equals(element)) {
                     currentNode.setNext(currentNode.getNext().getNext());
                     numEle --;
                 } else {
-                    currentNode = currentNode.getNext();
+                    currentNode = currentNode.getNext();                                            // Doesn't remove nodes whose values are equal to element
                 }
                 lastNode = currentNode;
             }
-            isSorted = true;
+            isSorted = true;                                                                        // Updates isSorted
         }
     }
 
@@ -186,19 +187,19 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
     public void reverse() {
         if (numEle != 0 || numEle != 1) {
             currentNode = firstNode.getNext();
-            lastNode = firstNode.getNext();
-            Node<T> newL = null;
+            lastNode = firstNode.getNext();                                                         // Updates lastNode
+            Node<T> prevNode = null;
             while (currentNode != null) {
-                Node<T> temp = currentNode;
-                currentNode = currentNode.getNext();
-                temp.setNext(newL);
-                newL = temp;
+                Node<T> temp = currentNode;                                                         // Stores a copy of current pointer in temp to reverse its direction
+                currentNode = currentNode.getNext();                                                // Moves ahead current pointer
+                temp.setNext(prevNode);                                                             // Reverses the direction of the temp
+                prevNode = temp;                                                                    // Updates previous node
             }
-            firstNode.setNext(newL);
+            firstNode.setNext(prevNode);
 
             isSorted = true;
             currentNode = firstNode.getNext();
-            while (isSorted && currentNode.getNext() != null) {
+            while (isSorted && currentNode.getNext() != null) {                                     // Updates isSorted
                 isSorted = currentNode.getData().compareTo(currentNode.getNext().getData()) <= 0;
                 currentNode = currentNode.getNext();
             }
@@ -243,24 +244,24 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
     @Override
     public boolean rotate(int n) {
         currentNode = firstNode;
-        if (n <= 0 || numEle <= 1 || n >= numEle) {
+        if (n <= 0 || numEle <= 1 || n >= numEle) {                                             // Fall through case
             return false;
         }
         while (n++ < numEle) {
-            currentNode = currentNode.getNext();
+            currentNode = currentNode.getNext();                                                // Sets currentNode to the last node of the rotated list
         }
-        lastNode.setNext(firstNode.getNext());
-        firstNode.setNext(currentNode.getNext());
-        currentNode.setNext(null);
+        lastNode.setNext(firstNode.getNext());                                                  // Updates lastNode
+        firstNode.setNext(currentNode.getNext());                                               // Sets firstNode to the node just after the lastNode (Bringing rotated nodes to the front of the list)
+        currentNode.setNext(null);                                                              // Sets lastNode's next pointer to null (to really make it the last node)
 
         isSorted = true;
         currentNode = firstNode.getNext();
-        while (isSorted && currentNode.getNext() != null) {
+        while (isSorted && currentNode.getNext() != null) {                                     // Updates isSorted
             isSorted = currentNode.getData().compareTo(currentNode.getNext().getData()) <= 0;
             currentNode = currentNode.getNext();
         }
 
-        while (lastNode.getNext() != null) {
+        while (lastNode.getNext() != null) {                                                    // Updates lastNode
             lastNode = lastNode.getNext();
         }
 
@@ -279,21 +280,7 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
     }
 
     @Override
-    public boolean isSorted() {                     // Returns isSorted, whether the linked list is sorted
+    public boolean isSorted() {                     // Returns isSorted
         return isSorted;
-    }
-
-    public static void main(String[] args) {
-        LinkedList<Integer> l1 = new LinkedList<Integer>();
-//        LinkedList<Integer> l2 = new LinkedList<Integer>();
-        l1.add(1);
-        l1.add(3);
-        l1.add(7);
-        l1.add(9);
-        l1.add(10);
-        l1.add(10);
-        l1.add(6, 1);
-        l1.remove(4);
-        System.out.println(l1);
     }
 }
