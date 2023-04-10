@@ -416,15 +416,15 @@ public class LinkedListTest {
             list.clear();
 
             // remove
-//            for (int i = 0; i < 5; i++) {
-//                for (int j = 0; j < 50; j++) list.add(test[r.nextInt(test.length)]);
-//                for (int j = 0; j < 50; j++) {
-//                    list.remove(0);
-//                    boolean check = true;
-//                    for (int k = 1; k < list.size(); k++) check &= list.get(k).compareTo(list.get(k - 1)) >= 0;
-//                    assertEquals(check, list.isSorted());
-//                }
-//            }
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 50; j++) list.add(test[r.nextInt(test.length)]);
+                for (int j = 0; j < 50; j++) {
+                    list.remove(0);
+                    boolean check = true;
+                    for (int k = 1; k < list.size(); k++) check &= list.get(k).compareTo(list.get(k - 1)) >= 0;
+                    assertEquals(check, list.isSorted());
+                }
+            }
 
             list.clear();
             for (int i = 0; i < 5; i++) {
@@ -441,36 +441,36 @@ public class LinkedListTest {
             }
 
             // reverse
-//            for (int i = 0; i < 250; i++) {
-//                list.add(test[r.nextInt(test.length)]);
-//                list.reverse();
-//                boolean check = true;
-//                for (int k = 1; k < list.size(); k++) check &= list.get(k).compareTo(list.get(k - 1)) >= 0;
-//                assertEquals(check, list.isSorted());
-//            }
-//            list.clear();
-//
-//            for (int i = 4; i >= 0; i--)
-//                for (int j = 0; j < 100; j++) list.add(sorted[i]);
-//            list.reverse();
-//            assertTrue(list.isSorted());
+            for (int i = 0; i < 250; i++) {
+                list.add(test[r.nextInt(test.length)]);
+                list.reverse();
+                boolean check = true;
+                for (int k = 1; k < list.size(); k++) check &= list.get(k).compareTo(list.get(k - 1)) >= 0;
+                assertEquals(check, list.isSorted());
+            }
+            list.clear();
+
+            for (int i = 4; i >= 0; i--)
+                for (int j = 0; j < 100; j++) list.add(sorted[i]);
+            list.reverse();
+            assertTrue(list.isSorted());
 
             // rotate
-//            for (int i = 0; i < 250; i++) list.add(test[r.nextInt(test.length)]);
-//            for (int i = 0; i < 5; i++) {
-//                list.rotate(r.nextInt(list.size() / 2));
-//                boolean check = true;
-//                for (int k = 1; k < list.size(); k++) check &= list.get(k).compareTo(list.get(k - 1)) >= 0;
-//                assertEquals(check, list.isSorted());
-//            }
-//            list.clear();
-//
-//            for (int i = 0; i < 5; i++)
-//                for (int j = 0; j < 5; j++) list.add(sorted[i]);
-//
-//            for (int i = 0; i < 25; i++) list.rotate(1);
-//            assertTrue(list.isSorted());
-//            list.clear();
+            for (int i = 0; i < 250; i++) list.add(test[r.nextInt(test.length)]);
+            for (int i = 0; i < 5; i++) {
+                list.rotate(r.nextInt(list.size() / 2));
+                boolean check = true;
+                for (int k = 1; k < list.size(); k++) check &= list.get(k).compareTo(list.get(k - 1)) >= 0;
+                assertEquals(check, list.isSorted());
+            }
+            list.clear();
+
+            for (int i = 0; i < 5; i++)
+                for (int j = 0; j < 5; j++) list.add(sorted[i]);
+
+            for (int i = 0; i < 25; i++) list.rotate(1);
+            assertTrue(list.isSorted());
+            list.clear();
         }
     }
 }

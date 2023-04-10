@@ -5,14 +5,16 @@ public class ArrayList<T extends Comparable<T>> implements List<T> {
     private int count;
     private boolean isSorted;
 
-    // Constructor initializes the ArrayList and sets isSorted to true.
+    // Constructor: Initializes an empty ArrayList with a default capacity of 2,
+    // sets the count to 0, and sets isSorted to true.
     public ArrayList() {
         elements = (T[]) new Comparable[2];
         count = 0;
         isSorted = true;
     }
 
-    // Checks if the ArrayList is sorted and returns the result.
+    // Private helper method: Checks if the ArrayList is sorted in ascending order
+    // and returns true if it is, otherwise returns false.
     private boolean checkIsSorted() {
         boolean check = true;
         for (int k = 1; k < count; k++) {
@@ -21,7 +23,8 @@ public class ArrayList<T extends Comparable<T>> implements List<T> {
         return check;
     }
 
-    // Increases the size of the elements array when needed.
+    // Private helper method: Grows the capacity of the ArrayList by doubling its
+    // current size.
     private void grow() {
         T[] updatedElements = (T[]) new Comparable[elements.length * 2];
         for (int i = 0; i < count; i++) {
@@ -30,7 +33,8 @@ public class ArrayList<T extends Comparable<T>> implements List<T> {
         elements = updatedElements;
     }
 
-    // Adds a value to the end of the ArrayList.
+    // Adds a new element to the end of the ArrayList. Returns true if the element
+    // was added successfully, otherwise returns false
     public boolean add(T value) {
         if (value == null) {
             return false;
@@ -46,7 +50,8 @@ public class ArrayList<T extends Comparable<T>> implements List<T> {
         return true;
     }
 
-    // Inserts a value at a specific position in the ArrayList.
+    // Inserts a new element at the specified position in the ArrayList. Returns
+    // true if the element was added successfully, otherwise returns false
     public boolean add(int position, T value) {
         if (value == null || position < 0 || position >= count) {
             return false;
@@ -71,15 +76,16 @@ public class ArrayList<T extends Comparable<T>> implements List<T> {
         return true;
     }
 
-
-    // Clears the ArrayList and resets isSorted to true.
+    // Removes all elements from the ArrayList, resets the capacity to the default
+    // value, and sets isSorted to true.
     public void clear() {
         elements = (T[]) new Comparable[2];
         count = 0;
         isSorted = true;
     }
 
-    // Returns the element at a specific position.
+    // Retrieves the element at the specified position in the ArrayList. Returns the
+    // element if the position is valid, otherwise returns null.
     public T get(int position) {
         if (position < 0 || position >= count) {
             return null;
@@ -87,7 +93,8 @@ public class ArrayList<T extends Comparable<T>> implements List<T> {
         return elements[position];
     }
 
-    // Finds the first index of a value in the ArrayList.
+    // Finds the index of the first occurrence of the specified value in the
+    // ArrayList. Returns the index if the value is found, otherwise returns -1.
     public int indexOf(T value) {
         if (value == null) {
             return -1;
@@ -111,17 +118,19 @@ public class ArrayList<T extends Comparable<T>> implements List<T> {
         return index;
     }
 
-    // Checks if the ArrayList is empty.
+    // Checks if the ArrayList is empty. Returns true if the ArrayList has no
+    // elements, otherwise returns false.
     public boolean isEmpty() {
         return count == 0;
     }
 
-    // Returns the number of elements in the ArrayList.
+    // Returns the current number of elements in the ArrayList.
     public int size() {
         return count;
     }
 
-    // Sorts the ArrayList using insertion sort.
+    // Sorts the elements of the ArrayList in ascending order using the insertion
+    // sort algorithm.
     public void sort() {
         if (!isSorted) {
             for (int i = 1; i < count; i++) {
@@ -137,7 +146,8 @@ public class ArrayList<T extends Comparable<T>> implements List<T> {
         }
     }
 
-    // Removes the element at a specific position.
+    // Removes the element at the specified position in the ArrayList. Returns the
+    // removed element if the position is valid, otherwise returns null.
     public T remove(int position) {
         if (position < 0 || position >= count) {
             return null;
@@ -162,7 +172,8 @@ public class ArrayList<T extends Comparable<T>> implements List<T> {
         return removedElement;
     }
 
-    // Removes all elements except those equal to the given value.
+    // Retains only the elements in the ArrayList that are equal to the specified
+    // value. If the value is null, it clears the ArrayList.
     public void equalTo(T value) {
         if (value == null) {
             count = 0;
@@ -187,7 +198,7 @@ public class ArrayList<T extends Comparable<T>> implements List<T> {
         isSorted = checkIsSorted();
     }
 
-    // Reverses the order of elements in the ArrayList.
+    // Reverses the order of the elements in the ArrayList.
     public void reverse() {
         int leftIndex = 0;
         int rightIndex = count - 1;
@@ -207,7 +218,8 @@ public class ArrayList<T extends Comparable<T>> implements List<T> {
         isSorted = checkIsSorted();
     }
 
-    // Merges the current ArrayList with another sorted list.
+    // Merges the current ArrayList with another sorted ArrayList, resulting in a
+    // new sorted ArrayList.
     public void merge(List<T> otherList) {
         if (otherList == null || otherList.isEmpty()) {
             return;
@@ -243,7 +255,9 @@ public class ArrayList<T extends Comparable<T>> implements List<T> {
         isSorted = true;
     }
 
-    // Rotates the ArrayList by a given number of positions.
+    // Rotates the ArrayList by the specified number of positions to the right.
+    // Returns true if the rotation is performed successfully, otherwise returns
+    // false
     public boolean rotate(int n) {
         if (n <= 0 || count <= 1) {
             return false;
@@ -280,57 +294,17 @@ public class ArrayList<T extends Comparable<T>> implements List<T> {
         return true;
     }
 
-    // Returns true if the ArrayList is sorted, false otherwise.
+    // Returns true if the ArrayList is sorted in ascending order, otherwise returns
+    // false.
     public boolean isSorted() {
         return isSorted;
     }
+
+    public String toString() {
+        String retStr = "";
+        for (int i = 0; i < count; i++) {
+            retStr += elements[i] + "\n";
+        }
+        return retStr;
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//    public String toString() {
-//        StringBuilder sb = new StringBuilder();
-//        for (int i = 0; i < nextEmpty; i++) {
-//            sb.append(arrayList[i].toString());
-//            if (i < nextEmpty - 1) {
-//                sb.append("\n");
-//            }
-//        }
-//        return sb.toString();
-//    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

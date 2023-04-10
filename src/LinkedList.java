@@ -1,10 +1,11 @@
+//
 public class LinkedList<T extends Comparable<T>> implements List<T> {
     private Node<T> firstNode;                              // Points to the header node in the headed linked list
     private Node<T> currentNode;                            // Points to the node we are working with - Initialised to firstNode or firstNode.getNext() at the start of required methods
     private Node<T> lastNode;                               // Points to the last node in the List
     private boolean isSorted = true;
     private int numEle;                                     // Keeps track of number of elements in the list
-    public LinkedList() {
+    public LinkedList() {                                   // Constructor
         firstNode = new Node<T>(null);
         currentNode = firstNode;
         lastNode = firstNode;
@@ -18,7 +19,7 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
         }
         lastNode.setNext(new Node<T>(element, null));                           // Adds element to the end of the list
         numEle ++;
-        if (numEle > 1 && isSorted) {                                                // Checks for isSorted only if list is sorted
+        if (numEle > 1 && isSorted) {                                                // Checks for isSorted only if list was previously sorted
             isSorted = lastNode.getData().compareTo(element) <= 0;                   // Compares previous lastNode to added element
         }
         lastNode = lastNode.getNext();                                               // Updates lastNode
@@ -36,10 +37,13 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
             currentNode = currentNode.getNext();
         }
         currentNode.setNext(new Node<T>(element, currentNode.getNext()));                               // Adds element at given index
-        if (numEle > 1 && isSorted) {                                                                   // Checks for isSorted only if list is sorted
+
+        numEle ++;
+
+        if (numEle > 1 && isSorted) {                                                                   // Checks for isSorted only if list was previously sorted
             isSorted = (currentNode.getData() == null || currentNode.getData().compareTo(element) <= 0) && (currentNode.getNext().getNext() == null || element.compareTo(currentNode.getNext().getNext().getData()) <= 0);      // Compares added value with the previous and the next values (also takes care of null if added at first or last index)
         }
-        numEle ++;
+
         if (lastNode.getNext() != null) {                                                               // Updates lastNode
             lastNode = lastNode.getNext();
         }
@@ -128,40 +132,36 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
                 lastNode = lastNode.getNext();
             }
         }
-
         isSorted = true;
     }
 
     @Override
     public T remove(int index) {
         currentNode = firstNode;
-        if (index >= numEle || index < 0) {
+        if (index >= numEle || index < 0) {                                                         // Fall through case
             return null;
         }
         int ind = 0;
-        while (ind++ < index) {
+        while (ind++ < index) {                                                                     // Iterates to the node to be removed
             currentNode = currentNode.getNext();
         }
-        T removedEle = (T) currentNode.getNext().getData();
-        currentNode.setNext(currentNode.getNext().getNext());
-        numEle --;
+        T removedEle = (T) currentNode.getNext().getData();                                         // Gets to-be removed node
+        currentNode.setNext(currentNode.getNext().getNext());                                       // Skips the to-be removed node to remove it
+        numEle --;                                                                                  // Reduces the counter for number of elements in the list
 
         lastNode = firstNode;
-        while (lastNode.getNext() != null) {
+        while (lastNode.getNext() != null) {                                                        // Updates lastNode
             lastNode = lastNode.getNext();
         }
 
-//        if (!isSorted) {
-//            isSorted = true;
-//            currentNode = firstNode;
-//            while (isSorted && currentNode != lastNode) {
-//                currentNode = currentNode.getNext();
-//                if (currentNode.getData().compareTo(currentNode.getNext().getData()) > 0) {
-//                    isSorted = false;
-//                }
-//            }
-//        }
-
+        isSorted = true;
+        if (numEle > 1) {
+            currentNode = firstNode.getNext();
+            while (isSorted && currentNode.getNext() != null) {
+                isSorted = currentNode.getData().compareTo(currentNode.getNext().getData()) <= 0;   // Updates isSorted
+                currentNode = currentNode.getNext();
+            }
+        }
         return removedEle;
     }
 
@@ -195,6 +195,8 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
                 newL = temp;
             }
             firstNode.setNext(newL);
+
+            isSorted = true;
             currentNode = firstNode.getNext();
             while (isSorted && currentNode.getNext() != null) {
                 isSorted = currentNode.getData().compareTo(currentNode.getNext().getData()) <= 0;
@@ -251,6 +253,7 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
         firstNode.setNext(currentNode.getNext());
         currentNode.setNext(null);
 
+        isSorted = true;
         currentNode = firstNode.getNext();
         while (isSorted && currentNode.getNext() != null) {
             isSorted = currentNode.getData().compareTo(currentNode.getNext().getData()) <= 0;
