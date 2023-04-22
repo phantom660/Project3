@@ -127,6 +127,7 @@ public class LinkedList<T extends Comparable<T>> implements List<T> {
             }
             firstNode = sorted;                                                                     // Sets this list to the sorted list (header of this list to header of sorted list)
         }
+
         if (lastNode.getNext() != null) {                                                           // Sets the last node
             while (lastNode.getNext() != null) {
                 lastNode = lastNode.getNext();

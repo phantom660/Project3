@@ -1,0 +1,26 @@
+// Written by Srinivas Preetham Addepalli, addep011 and Tamojit Bera, bera0041
+
+Method	                    	ArrayList Runtime:	             	Explanation:
+
+get(int index)	                   O(1)                      		Getting an item from a list at a specific position is easy and quick in an ArrayList. This is because it can easily calculate the memory location where the item is stored using the item's position in the list, and this process doesn't take longer if the list is bigger.
+
+rotate(int n)	                   O(n)                      		The rotate method needs three in-place reverse operations to be done on different parts of the list. Each reverse operation takes linear time (O(n/2) for half the list and O(n) for the whole list), but the constant factors cancel out, so the overall complexity is O(n).
+
+merge(List<T> otherList)	 O(n + m)                  		The merge method starts by sorting both lists, which takes O(n^2) and O(m^2) time for each list. But since the lists are already sorted, the actual merging process takes linear time, or O(n + m). Since the merge operation makes up most of the overall complexity, the runtime is O(n + m).
+
+reverse()	                       	 O(n)                      		The reverse method goes through the list and swaps the items at the beginning and end of the list. Time complexity is linear because it only goes through half of the list once (O(n/2)), but constant factors are not taken into account, so runtime is O(n).
+
+
+
+
+
+
+Method	                    	LinkedList Runtime:	              	Explanation:
+
+get(int index)		O(n)			In a Linked List, getting an element from an index is O(n). This is because we need to traverse through the nodes of the linked list (n operations) to reach and extract the value at an index.		
+
+rotate(int n)		O(n)			The rotate method performs three in-place reverse operations at the point of rotation. But it takes a linear compleity of operations to reach the point of rotation. So the method has a time complexity of O(n). The isSorted check and lastNode updater add to the complexity and make it O(3n), but constant factors are not taken into account, so time complexity is O(n).
+
+merge(List<T> otherList)	O(n + m)			The merge method takes O(n + m). Th  2 sort methods take O(n^2) each but since the lists are already sorted at the time of merge, the actual merge is linear, which is O(n + m) for the final list, which is of length (n + m). The update for lastNode at the end of the method makes the time complexity O(2(n + m)), but constant factors are not taken into account, so time complexity is O(n + m).
+
+reverse()			O(n)			The reverse method traverses the list node-by-node and reverses the direction of each node to reverse the list. This has a linear time complexity O(n). The check for isSorted at the end of the method makes the time complexity O(2n), but constant factors are not taken into account, so time complexity is O(n).
